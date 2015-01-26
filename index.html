@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="css/style.css">
+
     <title>Cat Clicker</title>
   </head>
 
@@ -14,12 +16,14 @@
   <script src="js/jquery-1.11.1.min.js"></script>
   <script src="js/main.js"></script>
   <script>
-    var catClickers = [new CatClicker(0, 'Mr. Stevens', 'cat500x375.jpg', 'azure'), new CatClicker(1, 'Chewie', 'chewie.jpg')],
-        numberOfCatClickers = catClickers.length,
-        i;
+    var catNames = ['Fluffy', 'Mr. Whiskers', 'Claws', 'Sandy', 'Steve'],
+            numberOfCatClickers = catNames.length,
+            catClickers = [],
+            i;
 
     for(i = 0; i < numberOfCatClickers; i++) {
-      var currentCatClicker = catClickers[i];
+      var currentCatClicker = new CatClicker(i, catNames[i]);
+      catClickers.push(currentCatClicker);
       $('body').append(currentCatClicker.getHtml());
       currentCatClicker.setupClickEvent();
     }

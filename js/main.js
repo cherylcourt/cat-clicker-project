@@ -1,22 +1,18 @@
-var CatClicker = function(index, name, image, color) {
+var CatClicker = function(index, name) {
     this.name = name;
-    this.image = image;
     this.numberOfClicks = 0;
     this.numberOfClicksID = 'numberOfClicks' + index.toString();
     this.imageID = 'image' + index.toString();
-    if(color) {
-        this.color = color;
-    }
-    else {
-        this.color = 'black';
-    }
+    this.index = index;
 };
 
 CatClicker.prototype.getHtml = function() {
+    var catImage = '<img id="' + this.imageID + '" src="http://lorempixel.com/500/375/cats/' + this.index + '" width="500" height="375">';
+
     return '<div style="position: relative; width: 100%">' +
-        '<img id="' + this.imageID + '" src="images/' + this.image + '" width="500" height="375">' +
-        '<h2 id="' + this.numberOfClicksID + '" style="position: absolute; top: 0px; left: 25px; width: 100%; color: '+ this.color +'">0</h2>' +
-        '<h1 style="position: absolute; bottom: 0px; left: 25px; width: 100%; color: '+ this.color +'">' + this.name + '</h1>' +
+        catImage +
+        '<h2 style="position: absolute; top: 0px; left: 25px; width: 100%"><span id="' + this.numberOfClicksID + '" >0</span></h2>' +
+        '<h1 style="position: absolute; bottom: 0px; left: 25px; width: 100%"><span>' + this.name + '</span></h1>' +
         '</div>';
 };
 
