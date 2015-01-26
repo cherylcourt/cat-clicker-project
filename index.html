@@ -6,11 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <title>Cat Clicker</title>
   </head>
 
   <body style="background-color: azure">
+    <div class="row">
+      <div class="col-md-4">
+        <ul id="cat-list">
+        </ul>
+      </div>
+      <div id="display-area" class="col-md-8">
+      </div>
+    </div>
   </body>
 
   <script src="js/jquery-1.11.1.min.js"></script>
@@ -22,10 +31,17 @@
             i;
 
     for(i = 0; i < numberOfCatClickers; i++) {
-      var currentCatClicker = new CatClicker(i, catNames[i]);
+      var currentCatName = catNames[i];
+      $('#cat-list').append('<li><span id="cat-name' + i + '">' + currentCatName + '</span></li>');
+      var currentCatClicker = new CatClicker(i, currentCatName);
       catClickers.push(currentCatClicker);
-      $('body').append(currentCatClicker.getHtml());
-      currentCatClicker.setupClickEvent();
+
+      $( '#cat-name'+i ).click({index: i}, function(event) {
+        console.log("clicked!");
+        var catClicker = catClickers[event.data.index];
+        $('#display-area').html(catClicker.getHtml());
+        catClicker.setupClickEvent();
+      });
     }
   </script>
 </html>
