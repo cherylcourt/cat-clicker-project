@@ -1,3 +1,5 @@
+//TODO: separate out model from view
+
 var CatClicker = function(index, name) {
     this.name = name;
     this.numberOfClicks = 0;
