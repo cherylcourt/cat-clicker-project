@@ -24,24 +24,4 @@
 
   <script src="js/jquery-1.11.1.min.js"></script>
   <script src="js/main.js"></script>
-  <script>
-    var catNames = ['Fluffy', 'Mr. Whiskers', 'Claws', 'Sandy', 'Steve'],
-            numberOfCatClickers = catNames.length,
-            catClickers = [],
-            i;
-
-    for(i = 0; i < numberOfCatClickers; i++) {
-      var currentCatName = catNames[i];
-      $('#cat-list').append('<li><span id="cat-name' + i + '">' + currentCatName + '</span></li>');
-      var currentCatClicker = new CatClicker(i, currentCatName);
-      catClickers.push(currentCatClicker);
-
-      $( '#cat-name'+i ).click({index: i}, function(event) {
-        console.log("clicked!");
-        var catClicker = catClickers[event.data.index];
-        $('#display-area').html(catClicker.getHtml());
-        catClicker.setupClickEvent();
-      });
-    }
-  </script>
 </html>
