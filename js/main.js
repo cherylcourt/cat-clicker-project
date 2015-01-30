@@ -5,9 +5,6 @@ $(function(){
         currentCat: null,
         cats: [],
         init: function(catNames) {
-            //this.currentCat = null;
-            //this.cats = [];
-
             var numberOfCatClickers = catNames.length,
                 i;
 
