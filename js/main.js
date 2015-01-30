@@ -1,29 +1,29 @@
 
 $(function(){
     var model = {
+
+        currentCat: null,
+        cats: [],
         init: function(catNames) {
+            //this.currentCat = null;
+            //this.cats = [];
+
             var numberOfCatClickers = catNames.length,
-                catClickers = [],
                 i;
 
-            if (!localStorage.cats) {
-                console.log('initializing cat data');
-                localStorage.cats = JSON.stringify([]);
-                for(i = 0; i < numberOfCatClickers; i++) {
-                    model.add(new CatClicker(i, catNames[i]));
-                }
+            for(i = 0; i < numberOfCatClickers; i++) {
+                model.add(new CatClicker(i, catNames[i]));
             }
+
         },
         add: function(obj) {
-            var data = JSON.parse(localStorage.cats);
-            data.push(obj);
-            localStorage.cats = JSON.stringify(data);
+            model.cats.push(obj);
         },
         getAllCats: function() {
-            return JSON.parse(localStorage.cats);
+            return model.cats;
         },
         getCat: function(index) {
-            return this.getAllCats()[index];
+            return model.getAllCats()[index];
         },
         getAllCatNames: function() {
             var catNames = [];
@@ -34,9 +34,7 @@ $(function(){
         },
 
         incrementCatCounter: function(index) {
-            var data = JSON.parse(localStorage.cats);
-            data[index].numberOfClicks++;
-            localStorage.cats = JSON.stringify(data);
+            model.currentCat.numberOfClicks++;
         }
 
     };
@@ -62,13 +60,13 @@ $(function(){
         },
 
         displayCat: function(index) {
-            catDisplayView.render(model.getCat(index));
-            catDisplayView.registerClickEvent(index);
+            model.currentCat = model.getCat(index);
+            catDisplayView.render(model.currentCat);
         },
 
-        catClicked: function(index) {
-            model.incrementCatCounter(index);
-            octopus.displayCat(index);
+        catClicked: function() {
+            model.incrementCatCounter();
+            catDisplayView.render(model.currentCat);
         }
     };
 
@@ -100,33 +98,27 @@ $(function(){
     var catDisplayView = {
 
         init: function() {
-            this.displayArea = $('#display-area');
-        },
+            this.catImage = $('#cat-image');
+            this.numberOfClicks = $('#number-of-clicks');
+            this.catName = $('#cat-name');
 
-        registerClickEvent: function(index) {
-            $( '#image'+index ).click({index: index}, function(event) {
-                octopus.catClicked(event.data.index);
+            this.catImage.click(function(event) {
+                octopus.catClicked();
             });
         },
 
         render: function(cat) {
-            var catImage = '<img id="' + cat.imageID + '" src="http://lorempixel.com/500/375/cats/' + cat.index + '" width="500" height="375">',
-                clickNumberRendering = '<h2 style="position: absolute; top: 0px; left: 25px; width: 100%"><span id="' + cat.numberOfClicksID + '" >' + cat.numberOfClicks + '</span></h2>',
-                catNameRendering = '<h1 style="position: absolute; bottom: 0px; left: 25px; width: 100%"><span>' + cat.name + '</span></h1>';
-
-            this.displayArea.html(catImage + clickNumberRendering + catNameRendering);
+            this.catImage.attr("src",'http://lorempixel.com/500/375/cats/' + (cat.index + 1));
+            this.numberOfClicks.html(cat.numberOfClicks);
+            this.catName.html(cat.name);
         }
     };
 
     octopus.init();
 });
 
-
-
 var CatClicker = function(index, name) {
     this.name = name;
     this.numberOfClicks = 0;
-    this.numberOfClicksID = 'numberOfClicks' + index.toString();
-    this.imageID = 'image' + index.toString();
     this.index = index;
 };
