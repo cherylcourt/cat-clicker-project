@@ -33,7 +33,6 @@ $(function(){
         incrementCatCounter: function(index) {
             model.currentCat.numberOfClicks++;
         }
-
     };
 
 
@@ -45,6 +44,7 @@ $(function(){
             model.init(catNames);
             catListView.init(catNames.length);
             catDisplayView.init();
+            adminView.init();
             octopus.displayCat(0);
         },
 
@@ -59,11 +59,25 @@ $(function(){
         displayCat: function(index) {
             model.currentCat = model.getCat(index);
             catDisplayView.render(model.currentCat);
+            adminView.setupAdminEvent(model.currentCat);
         },
 
         catClicked: function() {
             model.incrementCatCounter();
             catDisplayView.render(model.currentCat);
+        },
+
+        updateCurrentCat: function(name, url, clicks) {
+            cat = model.getCat(model.currentCat.index);
+            cat.name = name;
+            cat.url = url;
+            cat.numberOfClicks = clicks;
+
+            model.currentCat = cat;
+
+            adminView.setupAdminEvent(model.currentCat);
+            catListView.updateCatName(model.currentCat.index, name);
+            octopus.displayCat(model.currentCat.index)
         }
     };
 
@@ -83,12 +97,16 @@ $(function(){
         render: function() {
             var htmlStr = '';
             var allCats = octopus.getAllCats();
-            console.log(allCats.toString());
+
             octopus.getAllCats().forEach(function(cat) {
                 htmlStr += '<li><span id="cat-name' + cat.index + '">' + cat.name + '</span></li>'
             });
-            console.log(htmlStr);
+
             this.catList.html(htmlStr);
+        },
+
+        updateCatName: function(index, name) {
+            $( '#cat-name'+ index).html(name);
         }
     };
 
@@ -105,9 +123,38 @@ $(function(){
         },
 
         render: function(cat) {
-            this.catImage.attr("src",'http://lorempixel.com/500/375/cats/' + (cat.index + 1));
+            this.catImage.attr("src", cat.url);
             this.numberOfClicks.html(cat.numberOfClicks);
             this.catName.html(cat.name);
+        }
+    };
+
+    var adminView = {
+        init: function() {
+            this.adminButton = $("#admin-button");
+
+            $("#cancel-button").click(function () {
+                $("#admin-form").hide();
+                $("#admin-button").show();
+            });
+
+            $("#save-button").click(function() {
+                $("#admin-form").hide();
+                $("#admin-button").show();
+                octopus.updateCurrentCat($("#admin-name").val(), $("#admin-url").val(), parseInt($("#admin-clicks").val()));
+            });
+        },
+
+        setupAdminEvent: function(currentCat) {
+            this.adminButton.click(function() {
+                $("#admin-button").hide();
+                $("#admin-form").show("fast");
+
+                $("#admin-name").val(currentCat.name);
+                $("#admin-url").val(currentCat.url);
+                $("#admin-clicks").val(currentCat.numberOfClicks);
+            });
+
         }
     };
 
@@ -118,4 +165,5 @@ var CatClicker = function(index, name) {
     this.name = name;
     this.numberOfClicks = 0;
     this.index = index;
+    this.url = 'http://lorempixel.com/500/375/cats/' + (index + 1);
 };
